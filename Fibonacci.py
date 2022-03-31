@@ -69,7 +69,33 @@ def fibonacci_iterative_table2(n):  # bottom up approach. calculate each fibonac
             results_table[n+1] = results_table[n+1] + results_table[n] + results_table[n-1]    
     return results_table[n+1]
 
+def fibonacci_matrix(n):  # bottom up approach using matrix multiplication. calculate each fibonacci in ascending order until we get to the desired value.
+    if n == 0: return 0
+    Fkplus1_Fk = np.array([1,0])    # initialising the values of the Fibonacci terms k=1 and k=0. wishing to find the term k=n
+    FibonacciMatrix = np.array([[1,1],[1,0]])
+    k=2
+    while k < n+1:
+        Fkplus1_Fk = FibonacciMatrix @ Fkplus1_Fk
+        k += 1    
+    return Fkplus1_Fk[0]
+
+
+
+def fibonacci_binet(n):  # use the Binet formula derived from eigenvalue decomposition of the Fibonacci matrix (or by induction).
+    if n == 0: return 0
+    F =  (((1 + (5**0.5))/2)**n - ((1 - (5**0.5))/2)**n)/(5**0.5)
+    #print(F)
+    return int(F)
+
+
+
+
+'''
 ## Testing Code
+for i in range(0,20):
+    print(i, ": ", fibonacci_binet(i))
+    print(i, ": ", fibonacci_matrix(i))
+
 print("fibonacci_recursive no memo (painfully slow:")
 for i in range(7):    
     print("Fibonacci number, {}: {}".format(i, fibonacci_recursive(i)))
@@ -93,7 +119,7 @@ for i in range(1,20):
 #
 for i in range(1,20):
     print(fibonacci_iterative(i))
-
+'''
 print("recursive  no memo - 8 Fibonacci numbers only - the others are all 40 ", timeit.timeit('fibonacci_recursive(8)', globals=globals(), number=100)) # this is really so slow that not worth comparing with others. 
 fibonacci = fibonacci_recursive_memo_class()   # instantiate a class
 print("class  recursive memo", timeit.timeit('fibonacci.calculate_fibonacci(40)', globals=globals(), number=100))
@@ -101,6 +127,8 @@ print(" recursive memo", timeit.timeit('fibonacci_recursive_memo(40)', globals=g
 print("iterative", timeit.timeit('fibonacci_iterative(40)', globals=globals(), number = 100 ))
 print("iterative table", timeit.timeit('fibonacci_iterative_table(40)', globals=globals(), number = 100 ))
 print("iterative table2", timeit.timeit('fibonacci_iterative_table2(40)', globals=globals(), number = 100 ))
+print("iterative matrix multiplication ", timeit.timeit('fibonacci_matrix(40)', globals=globals(), number = 100 ))
+print("analytic formula: Binet", timeit.timeit('fibonacci_binet(40)', globals=globals(), number = 100 ))
 
 print("Repeat timings to see any runtime variation:")
 print("class  recursive memo", timeit.timeit('fibonacci.calculate_fibonacci(40)', globals=globals(), number=100))
@@ -108,3 +136,5 @@ print(" recursive memo", timeit.timeit('fibonacci_recursive_memo(40)', globals=g
 print("iterative", timeit.timeit('fibonacci_iterative(40)', globals=globals(), number = 100 ))
 print("iterative table", timeit.timeit('fibonacci_iterative_table(40)', globals=globals(), number = 100 ))
 print("iterative table2", timeit.timeit('fibonacci_iterative_table2(40)', globals=globals(), number = 100 ))
+print("iterative table2", timeit.timeit('fibonacci_matrix(40)', globals=globals(), number = 100 ))
+print("analytic formula: Binet", timeit.timeit('fibonacci_binet(40)', globals=globals(), number = 100 ))
